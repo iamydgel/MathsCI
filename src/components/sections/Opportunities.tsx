@@ -40,8 +40,8 @@ function BadgesMarqueeRow({
   const tripled = React.useMemo(() => [...items, ...items, ...items], [items]);
   return (
     <div className="relative w-full overflow-hidden py-1.5 isolation-isolate">
-      {/* Edge gradients for smooth fade */}
-      <div className="pointer-events-none absolute left-0 top-0 h-full w-16 md:w-32 z-10 bg-gradient-to-r from-[#FFFDF9] via-[#FFFDF9]/80 to-transparent" />
+      {/* Edge gradients for smooth fade - reduced width to increase visibility */}
+      <div className="pointer-events-none absolute left-0 top-0 h-full w-8 md:w-16 z-10 bg-gradient-to-r from-[#FFFDF9] via-[#FFFDF9]/80 to-transparent" />
       
       <div
         className="flex transform-gpu min-w-[300%] gap-3"
@@ -61,7 +61,7 @@ function BadgesMarqueeRow({
         ))}
       </div>
 
-      <div className="pointer-events-none absolute right-0 top-0 h-full w-16 md:w-32 z-10 bg-gradient-to-l from-[#FFFDF9] via-[#FFFDF9]/80 to-transparent" />
+      <div className="pointer-events-none absolute right-0 top-0 h-full w-8 md:w-16 z-10 bg-gradient-to-l from-[#FFFDF9] via-[#FFFDF9]/80 to-transparent" />
     </div>
   );
 }
@@ -85,7 +85,7 @@ export const Opportunities: React.FC = () => {
       
       <div className="mx-auto max-w-7xl px-6">
         {/* Section Header */}
-        <div className="mx-auto flex flex-col items-center justify-center space-y-4 text-center max-w-3xl mb-12">
+        <div className="mx-auto flex flex-col items-center justify-center space-y-4 text-center max-w-3xl mb-8">
           <SectionLabel color="orange">Filières & Débouchés</SectionLabel>
           <h2 className="font-poppins text-3xl sm:text-4xl lg:text-5xl font-light tracking-tight text-ci-dark leading-tight">
             Les portes d'accès vers <span className="font-semibold text-ci-green">le succès d'avenir</span>
@@ -93,16 +93,17 @@ export const Opportunities: React.FC = () => {
           <p className="font-inter text-sm md:text-base text-ci-gray leading-relaxed font-light max-w-2xl">
             Une boussole claire pour les élèves et les étudiants souhaitant s'orienter vers les carrières les plus stimulantes et recherchées en Côte d'Ivoire.
           </p>
+        </div>
 
-          {/* Marquee badging questions */}
-          <div className="w-full max-w-3xl overflow-hidden mt-8 pt-4">
-            <div className="flex flex-col gap-2 w-full">
-              <BadgesMarqueeRow items={m1} reverse={false} speed={35} />
-              <BadgesMarqueeRow items={m2} reverse={true} speed={40} />
-              <BadgesMarqueeRow items={m3} reverse={false} speed={38} />
-            </div>
+        {/* Marquee badging questions - Moved out of max-w-3xl for wider visibility and increased width to max-w-5xl */}
+        <div className="w-full max-w-5xl mx-auto overflow-hidden mb-12">
+          <div className="flex flex-col gap-2 w-full">
+            <BadgesMarqueeRow items={m1} reverse={false} speed={35} />
+            <BadgesMarqueeRow items={m2} reverse={true} speed={40} />
+            <BadgesMarqueeRow items={m3} reverse={false} speed={38} />
           </div>
         </div>
+
 
         {/* Dash-divided Grid Layout matching target design */}
         <div className="mt-16 grid grid-cols-1 divide-dashed divide-gray-200 border-gray-200 border-t border-dashed sm:grid-cols-2 lg:grid-cols-3">
