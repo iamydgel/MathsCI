@@ -227,7 +227,7 @@ const chapters = [
     mockupTitle: "Olympiades_Niveau_Lycée.py",
     mockupCode: `def evaluer_potentiel(eleve):\n    score_logique = eleve.resoudre_enigme()\n    score_passion = eleve.participation_club()\n    \n    if score_logique > 85 and score_passion > 70:\n        return "Profil STEM d'Excellence"\n    return "Curiosité à encourager"`,
     mockupMetric: { label: "Élèves inspirés / an", value: "10 000+" },
-    image: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=900&h=700&fit=crop&crop=entropy&auto=format&q=80",
+    image: "/lyceens.jpg",
   },
   {
     id: "etudiant",
@@ -244,7 +244,7 @@ const chapters = [
     mockupTitle: "Calcul_Filiere_INPHB.rs",
     mockupCode: `fn calculer_admissibilite(candidat: &Etudiant) -> bool {\n    let moyenne_concours = candidat.note_maths * 0.6 + candidat.note_physique * 0.4;\n    let quota_excellence = 16.5;\n    \n    moyenne_concours >= quota_excellence\n}`,
     mockupMetric: { label: "Taux d'insertion", value: "98.5%" },
-    image: "https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?w=900&h=700&fit=crop&crop=entropy&auto=format&q=80",
+    image: "/etudiants.jpg",
   },
   {
     id: "professionnel",
