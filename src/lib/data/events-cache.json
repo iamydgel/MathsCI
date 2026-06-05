@@ -1,29 +1,32 @@
 {
-  "lastUpdated": "2026-06-05T12:42:46.355Z",
+  "lastUpdated": "2026-06-05T13:00:20.269Z",
   "events": [
     {
-      "id": "scraped-salon-0-1780663366355",
+      "id": "scraped-salon-0-1780664420269",
       "title": "INP-HB/SOCIETAL : OISSU 2026 : L’INP-HB DECROCHE SON PREMIER TITRE NATIONAL EN B...",
       "date": "Juillet 2026",
       "location": "Yamoussoukro, Campus INP-HB",
       "type": "Salon",
-      "ctaLabel": "Voir les détails"
+      "ctaLabel": "Voir les détails",
+      "eventUrl": "https://inphb.edu.ci/inp-hb-societal-oissu-2026-linp-hb-decroche-son-premier-titre-national-en-basket-ball-masculin/"
     },
     {
-      "id": "scraped-salon-1-1780663366355",
+      "id": "scraped-salon-1-1780664420269",
       "title": "INP-HB/ SOCIETAL : L’INP-HB RENFORCE LES ÉCHANGES CULTURELS AVEC UNE DÉLÉGATION ...",
       "date": "Juillet 2026",
       "location": "Yamoussoukro, Campus INP-HB",
       "type": "Salon",
-      "ctaLabel": "Voir les détails"
+      "ctaLabel": "Voir les détails",
+      "eventUrl": "https://inphb.edu.ci/inp-hb-societal-linp-hb-renforce-les-echanges-culturels-avec-une-delegation-scolaire-liberienne/"
     },
     {
-      "id": "scraped-salon-2-1780663366355",
+      "id": "scraped-salon-2-1780664420269",
       "title": "INP-HB / RENFORCEMENT DES PARTENARIATS : INP‑HB ET LE FOOTBALL CLUB (FC) YAMOUSS...",
       "date": "Juillet 2026",
       "location": "Yamoussoukro, Campus INP-HB",
       "type": "Salon",
-      "ctaLabel": "Voir les détails"
+      "ctaLabel": "Voir les détails",
+      "eventUrl": "https://inphb.edu.ci/inp-hb-renforcement-des-partenariats-inp-hb-et-le-football-club-fc-yamoussoukro-sunissent-pour-promouvoir-le-sport-et-lexcellence-en-cote-divoire/"
     },
     {
       "id": "olympiades-nationales",
@@ -31,7 +34,8 @@
       "date": "15 Février 2026",
       "location": "Abidjan, Lycée Sainte-Marie",
       "type": "Olympiade",
-      "ctaLabel": "S'inscrire"
+      "ctaLabel": "S'inscrire",
+      "eventUrl": "https://societemathematiqueci.org"
     },
     {
       "id": "portes-ouvertes-inphb-base",
@@ -39,7 +43,8 @@
       "date": "08 Mars 2026",
       "location": "Yamoussoukro, Campus INP-HB",
       "type": "Salon",
-      "ctaLabel": "Voir le programme"
+      "ctaLabel": "Voir le programme",
+      "eventUrl": "https://inphb.ci"
     },
     {
       "id": "conf-maths-ia-base",
@@ -47,7 +52,8 @@
       "date": "22 Avril 2026",
       "location": "Abidjan, Palais des Congrès",
       "type": "Conférence",
-      "ctaLabel": "Réserver son badge"
+      "ctaLabel": "Réserver son badge",
+      "eventUrl": "https://univ-fhb.edu.ci"
     }
   ]
 }
