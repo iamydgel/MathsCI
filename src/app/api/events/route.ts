@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import fs from 'fs/promises';
 import path from 'path';
 import { EventScraperService } from '@/lib/services/scraper';
@@ -6,7 +6,10 @@ import { EventScraperService } from '@/lib/services/scraper';
 const CACHE_FILE_PATH = path.join(process.cwd(), 'src/lib/data/events-cache.json');
 const CACHE_EXPIRATION_MS = 12 * 60 * 60 * 1000; // 12 heures
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  const { searchParams } = new URL(request.url);
+  const force = searchParams.get('force') === 'true';
+
   let cacheData: any = null;
   let shouldUpdateCache = false;
 
@@ -27,7 +30,30 @@ export async function GET() {
     shouldUpdateCache = true;
   }
 
-  // 2. Déclencher la mise à jour asynchrone du cache en arrière-plan
+  // 2. Si l'utilisateur force le rafraîchissement temps réel synchrone
+  if (force) {
+    try {
+      console.log('Rafraîchissement forcé en temps réel demandé...');
+      const freshEvents = await EventScraperService.scrapeAll();
+      const cachePayload = {
+        lastUpdated: new Date().toISOString(),
+        events: freshEvents
+      };
+      
+      const dir = path.dirname(CACHE_FILE_PATH);
+      await fs.mkdir(dir, { recursive: true });
+      await fs.writeFile(CACHE_FILE_PATH, JSON.stringify(cachePayload, null, 2), 'utf-8');
+      
+      return new NextResponse(JSON.stringify(freshEvents), {
+        status: 200,
+        headers: getHeaders(),
+      });
+    } catch (error) {
+      console.error('Erreur lors du scraping forcé, retour au cache:', error);
+    }
+  }
+
+  // 3. Déclencher la mise à jour asynchrone du cache en arrière-plan
   if (shouldUpdateCache) {
     // Note : Nous exécutons la fonction en arrière-plan sans "await"
     // pour que le client reçoive immédiatement les données actuelles du cache
@@ -37,19 +63,23 @@ export async function GET() {
     });
   }
 
-  // 3. Retourner les données du cache (ou fallback par défaut si tout échoue)
+  // 4. Retourner les données du cache (ou fallback par défaut si tout échoue)
   const responseData = cacheData?.events || getDefaultFallbackEvents();
 
   return new NextResponse(JSON.stringify(responseData), {
     status: 200,
-    headers: {
-      'Content-Type': 'application/json',
-      // Interdire la mise en cache par le navigateur pour forcer l'actualisation au refresh
-      'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
-      'Pragma': 'no-cache',
-      'Expires': '0',
-    },
+    headers: getHeaders(),
   });
+}
+
+function getHeaders() {
+  return {
+    'Content-Type': 'application/json',
+    // Interdire la mise en cache par le navigateur pour forcer l'actualisation au refresh
+    'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+    'Pragma': 'no-cache',
+    'Expires': '0',
+  };
 }
 
 /**
@@ -85,7 +115,8 @@ function getDefaultFallbackEvents() {
       date: `15 Février ${currentYear}`,
       location: "Abidjan, Lycée Sainte-Marie",
       type: "Olympiade",
-      ctaLabel: "S'inscrire"
+      ctaLabel: "S'inscrire",
+      eventUrl: "https://societemathematiqueci.org"
     },
     {
       id: "portes-ouvertes-inphb",
@@ -93,7 +124,8 @@ function getDefaultFallbackEvents() {
       date: `08 Mars ${currentYear}`,
       location: "Yamoussoukro, Campus INP-HB",
       type: "Salon",
-      ctaLabel: "Voir le programme"
+      ctaLabel: "Voir le programme",
+      eventUrl: "https://inphb.ci"
     },
     {
       id: "conf-maths-ia",
@@ -101,7 +133,8 @@ function getDefaultFallbackEvents() {
       date: `22 Avril ${currentYear}`,
       location: "Abidjan, Palais des Congrès",
       type: "Conférence",
-      ctaLabel: "Réserver son badge"
+      ctaLabel: "Réserver son badge",
+      eventUrl: "https://univ-fhb.edu.ci"
     },
     {
       id: "masterclass-actuaire",
@@ -109,7 +142,8 @@ function getDefaultFallbackEvents() {
       date: `10 Mai ${currentYear}`,
       location: "En ligne (Zoom)",
       type: "Masterclass",
-      ctaLabel: "Rejoindre le webinaire"
+      ctaLabel: "Rejoindre le webinaire",
+      eventUrl: "https://ensea.ed.ci"
     },
     {
       id: "salon-grandes-ecoles",
@@ -117,7 +151,8 @@ function getDefaultFallbackEvents() {
       date: `07 Juin ${currentYear}`,
       location: "Abidjan, Sofitel Hôtel Ivoire",
       type: "Salon",
-      ctaLabel: "Obtenir mon ticket"
+      ctaLabel: "Obtenir mon ticket",
+      eventUrl: "https://mesrs.gouv.ci"
     },
     {
       id: "concours-ensea",
@@ -125,7 +160,8 @@ function getDefaultFallbackEvents() {
       date: `20 Juin ${currentYear}`,
       location: "Abidjan, Campus ENSEA",
       type: "Concours",
-      ctaLabel: "Télécharger le dossier"
+      ctaLabel: "Télécharger le dossier",
+      eventUrl: "https://ensea.ed.ci"
     }
   ];
 }

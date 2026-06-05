@@ -45,6 +45,7 @@ export interface EventItem {
   location: string;
   type: 'Olympiade' | 'Conférence' | 'Masterclass' | 'Salon' | 'Concours';
   ctaLabel: string;
+  eventUrl?: string;
 }
 
 export interface MissionData {

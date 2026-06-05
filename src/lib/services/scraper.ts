@@ -7,13 +7,15 @@ interface ScrapedEvent {
   location: string;
   type: EventItem['type'];
   ctaLabel: string;
+  eventUrl: string;
 }
 
 export class EventScraperService {
   // URLs des sites cibles pour le scraping des événements/actualités
   private static SOURCES = {
     ENSEA: 'https://ensea.ed.ci/actualites/',
-    INPHB: 'https://inphb.ci/actualites' // ou page principale
+    INPHB: 'https://inphb.ci/actualites', // ou page principale
+    UFHB: 'https://univ-fhb.edu.ci/index.php/category/actualites/'
   };
 
   /**
@@ -39,7 +41,15 @@ export class EventScraperService {
       console.error('Erreur de scraping INP-HB, utilisation du fallback:', error);
     }
 
-    // 3. Fusion et complétion avec les événements par défaut ajustés à l'année courante
+    // 3. Scraping de l'UFHB
+    try {
+      const ufhbEvents = await this.scrapeUFHB();
+      events.push(...ufhbEvents);
+    } catch (error) {
+      console.error('Erreur de scraping UFHB, utilisation du fallback:', error);
+    }
+
+    // 4. Fusion et complétion avec les événements par défaut ajustés à l'année courante
     const mergedEvents = this.mergeWithDefaultEvents(events);
 
     return mergedEvents;
@@ -70,6 +80,7 @@ export class EventScraperService {
     $('.post, article, .et_pb_post, .entry-header').each((_, element) => {
       const title = $(element).find('h2, h3, .entry-title, .title').first().text().trim();
       const rawDate = $(element).find('.published, .date, .post-meta, time').first().text().trim();
+      const link = $(element).find('a').first().attr('href') || this.SOURCES.ENSEA;
       
       if (title) {
         // Formater la date en français si possible
@@ -80,7 +91,8 @@ export class EventScraperService {
           date: cleanedDate,
           location: 'Abidjan, Campus ENSEA',
           type: title.toLowerCase().includes('concours') ? 'Concours' : 'Conférence',
-          ctaLabel: 'En savoir plus'
+          ctaLabel: 'En savoir plus',
+          eventUrl: link
         });
       }
     });
@@ -120,6 +132,7 @@ export class EventScraperService {
       $('article, .news-item, .post').each((_, element) => {
         const title = $(element).find('h2, h3, h4, .title').first().text().trim();
         const rawDate = $(element).find('.date, time, .meta').first().text().trim();
+        const link = $(element).find('a').first().attr('href') || this.SOURCES.INPHB;
 
         if (title) {
           const cleanedDate = this.cleanScrapedDate(rawDate) || 'Juillet 2026';
@@ -129,7 +142,59 @@ export class EventScraperService {
             date: cleanedDate,
             location: 'Yamoussoukro, Campus INP-HB',
             type: title.toLowerCase().includes('concours') ? 'Concours' : 'Salon',
-            ctaLabel: 'Voir les détails'
+            ctaLabel: 'Voir les détails',
+            eventUrl: link
+          });
+        }
+      });
+
+      return results.slice(0, 3);
+    } catch (e) {
+      clearTimeout(id);
+      throw e;
+    }
+  }
+
+  /**
+   * Scrape le site de l'Université Félix Houphouët-Boigny (UFHB)
+   */
+  private static async scrapeUFHB(): Promise<ScrapedEvent[]> {
+    const controller = new AbortController();
+    const id = setTimeout(() => controller.abort(), 6000);
+
+    try {
+      const response = await fetch(this.SOURCES.UFHB, {
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+        },
+        signal: controller.signal,
+        next: { revalidate: 0 }
+      });
+      
+      clearTimeout(id);
+
+      if (!response.ok) {
+        throw new Error(`Statut HTTP invalide pour UFHB: ${response.status}`);
+      }
+
+      const html = await response.text();
+      const $ = cheerio.load(html);
+      const results: ScrapedEvent[] = [];
+
+      $('article, .post, .blog-post').each((_, element) => {
+        const title = $(element).find('h2, h3, .entry-title, .title').first().text().trim();
+        const rawDate = $(element).find('.date, time, .entry-date, .meta').first().text().trim();
+        const link = $(element).find('a').first().attr('href') || this.SOURCES.UFHB;
+
+        if (title) {
+          const cleanedDate = this.cleanScrapedDate(rawDate) || 'Août 2026';
+          results.push({
+            title: this.truncateText(title, 80),
+            date: cleanedDate,
+            location: 'Abidjan, Campus UFHB (Cocody)',
+            type: title.toLowerCase().includes('masterclass') || title.toLowerCase().includes('formation') ? 'Masterclass' : 'Conférence',
+            ctaLabel: 'En savoir plus',
+            eventUrl: link
           });
         }
       });
@@ -178,7 +243,8 @@ export class EventScraperService {
         date: `15 Février ${currentYear}`,
         location: "Abidjan, Lycée Sainte-Marie",
         type: "Olympiade",
-        ctaLabel: "S'inscrire"
+        ctaLabel: "S'inscrire",
+        eventUrl: "https://societemathematiqueci.org"
       },
       {
         id: "portes-ouvertes-inphb-base",
@@ -186,7 +252,8 @@ export class EventScraperService {
         date: `08 Mars ${currentYear}`,
         location: "Yamoussoukro, Campus INP-HB",
         type: "Salon",
-        ctaLabel: "Voir le programme"
+        ctaLabel: "Voir le programme",
+        eventUrl: "https://inphb.ci"
       },
       {
         id: "conf-maths-ia-base",
@@ -194,7 +261,8 @@ export class EventScraperService {
         date: `22 Avril ${currentYear}`,
         location: "Abidjan, Palais des Congrès",
         type: "Conférence",
-        ctaLabel: "Réserver son badge"
+        ctaLabel: "Réserver son badge",
+        eventUrl: "https://univ-fhb.edu.ci"
       },
       {
         id: "masterclass-actuaire-base",
@@ -202,7 +270,8 @@ export class EventScraperService {
         date: `10 Mai ${currentYear}`,
         location: "En ligne (Zoom)",
         type: "Masterclass",
-        ctaLabel: "Rejoindre le webinaire"
+        ctaLabel: "Rejoindre le webinaire",
+        eventUrl: "https://ensea.ed.ci"
       },
       {
         id: "salon-grandes-ecoles-base",
@@ -210,7 +279,8 @@ export class EventScraperService {
         date: `07 Juin ${currentYear}`,
         location: "Abidjan, Sofitel Hôtel Ivoire",
         type: "Salon",
-        ctaLabel: "Obtenir mon ticket"
+        ctaLabel: "Obtenir mon ticket",
+        eventUrl: "https://mesrs.gouv.ci"
       },
       {
         id: "concours-ensea-base",
@@ -218,7 +288,8 @@ export class EventScraperService {
         date: `20 Juin ${currentYear}`,
         location: "Abidjan, Campus ENSEA",
         type: "Concours",
-        ctaLabel: "Télécharger le dossier"
+        ctaLabel: "Télécharger le dossier",
+        eventUrl: "https://ensea.ed.ci"
       }
     ];
 
@@ -229,7 +300,8 @@ export class EventScraperService {
       date: event.date,
       location: event.location,
       type: event.type,
-      ctaLabel: event.ctaLabel
+      ctaLabel: event.ctaLabel,
+      eventUrl: event.eventUrl
     }));
 
     // Fusionner : on place les événements scrapés en tête s'ils existent,

@@ -48,7 +48,8 @@ export const Agenda: React.FC = () => {
     else setIsRefreshing(true);
 
     try {
-      const res = await fetch('/api/events', {
+      const url = silent ? '/api/events?force=true' : '/api/events';
+      const res = await fetch(url, {
         cache: 'no-store', // S'assurer que le fetch demande la dernière version
       });
       if (!res.ok) throw new Error('Erreur de chargement');
@@ -195,7 +196,21 @@ export const Agenda: React.FC = () => {
 
                       {/* Right Segment: CTA Action */}
                       <div className="flex items-center justify-start md:justify-end">
-                        <Button variant="outline" className="w-full md:w-auto text-xs md:text-sm py-2 px-4 flex items-center justify-center gap-1.5 group">
+                        <Button 
+                          variant="outline" 
+                          className="w-full md:w-auto text-xs md:text-sm py-2 px-4 flex items-center justify-center gap-1.5 group"
+                          onClick={() => {
+                            const fallbackUrl = event.location.toLowerCase().includes('inp-hb') 
+                              ? 'https://inphb.ci' 
+                              : event.location.toLowerCase().includes('ensea') 
+                                ? 'https://ensea.ed.ci' 
+                                : event.location.toLowerCase().includes('ufhb')
+                                  ? 'https://univ-fhb.edu.ci'
+                                  : 'https://mesrs.gouv.ci';
+                            const url = event.eventUrl || fallbackUrl;
+                            window.open(url, '_blank', 'noopener,noreferrer');
+                          }}
+                        >
                           <span>{event.ctaLabel}</span>
                           <ArrowRight className="h-3.5 w-3.5 transform group-hover:translate-x-1 transition-transform" />
                         </Button>

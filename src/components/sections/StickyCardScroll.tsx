@@ -98,9 +98,8 @@ const ParcoursSection: React.FC<ParcoursSectionProps> = ({
     >
       <div className="max-w-7xl mx-auto px-6 w-full">
         <div
-          className={`grid md:grid-cols-2 gap-12 lg:gap-20 items-center ${
-            !isEven ? "md:grid-flow-dense" : ""
-          }`}
+          className={`grid md:grid-cols-2 gap-12 lg:gap-20 items-center ${!isEven ? "md:grid-flow-dense" : ""
+            }`}
         >
           {/* ── Text Column ── */}
           <motion.div
@@ -189,9 +188,8 @@ const ParcoursSection: React.FC<ParcoursSectionProps> = ({
           {/* ── Image / Mockup Column ── */}
           <motion.div
             style={{ scale: imageScale, opacity: imageOpacity }}
-            className={`relative h-[380px] md:h-[520px] rounded-2xl overflow-hidden shadow-2xl ${
-              !isEven ? "md:col-start-1 md:row-start-1" : ""
-            }`}
+            className={`relative h-[380px] md:h-[520px] rounded-2xl overflow-hidden shadow-2xl ${!isEven ? "md:col-start-1 md:row-start-1" : ""
+              }`}
           >
             {/* Real image */}
             <img
@@ -278,7 +276,7 @@ const chapters = [
     mockupTitle: "oms_biostats_modele.py",
     mockupCode: `class ModeleEpidemique(SIRModel):\n    def simuler_propagation(self, taux_transmission):\n        S, I, R = self.etat_initial\n        d_S = -taux_transmission * S * I\n        d_I = (taux_transmission * S - self.guerison) * I\n        return [d_S, d_I]`,
     mockupMetric: { label: "Brevets & Papiers", value: "45 / an" },
-    image: "https://images.unsplash.com/photo-1532094349884-543559059c59?w=900&h=700&fit=crop&crop=entropy&auto=format&q=80",
+    image: "/chercheurs.jpg",
   },
 ];
 

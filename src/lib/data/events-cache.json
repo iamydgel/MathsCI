@@ -1,8 +1,16 @@
 {
-  "lastUpdated": "2026-06-04T08:43:24.537Z",
+  "lastUpdated": "2026-06-05T12:42:46.355Z",
   "events": [
     {
-      "id": "scraped-salon-0-1780562604537",
+      "id": "scraped-salon-0-1780663366355",
+      "title": "INP-HB/SOCIETAL : OISSU 2026 : L’INP-HB DECROCHE SON PREMIER TITRE NATIONAL EN B...",
+      "date": "Juillet 2026",
+      "location": "Yamoussoukro, Campus INP-HB",
+      "type": "Salon",
+      "ctaLabel": "Voir les détails"
+    },
+    {
+      "id": "scraped-salon-1-1780663366355",
       "title": "INP-HB/ SOCIETAL : L’INP-HB RENFORCE LES ÉCHANGES CULTURELS AVEC UNE DÉLÉGATION ...",
       "date": "Juillet 2026",
       "location": "Yamoussoukro, Campus INP-HB",
@@ -10,16 +18,8 @@
       "ctaLabel": "Voir les détails"
     },
     {
-      "id": "scraped-salon-1-1780562604537",
+      "id": "scraped-salon-2-1780663366355",
       "title": "INP-HB / RENFORCEMENT DES PARTENARIATS : INP‑HB ET LE FOOTBALL CLUB (FC) YAMOUSS...",
-      "date": "Juillet 2026",
-      "location": "Yamoussoukro, Campus INP-HB",
-      "type": "Salon",
-      "ctaLabel": "Voir les détails"
-    },
-    {
-      "id": "scraped-salon-2-1780562604537",
-      "title": "INP-HB/PARTENARIAT : L’INP-HB renforce sa coopération internationale avec Centra...",
       "date": "Juillet 2026",
       "location": "Yamoussoukro, Campus INP-HB",
       "type": "Salon",
